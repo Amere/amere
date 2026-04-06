@@ -83,16 +83,16 @@ function MobileNavigation(
           <PopoverButton aria-label="Close menu" className="-m-1 p-1">
             <CloseIcon className="h-6 w-6 text-zinc-400" />
           </PopoverButton>
-          <h2 className="text-sm font-medium text-zinc-400">
-            Navigation
+          <h2 className="text-sm font-medium text-cyan-400">
+            Explorer
           </h2>
         </div>
         <nav className="mt-6">
           <ul className="-my-2 divide-y divide-white/5 text-base text-zinc-200">
-            <MobileNavItem href="/about">About</MobileNavItem>
-            <MobileNavItem href="/experience">Experience</MobileNavItem>
-            <MobileNavItem href="/projects">Projects</MobileNavItem>
             <MobileNavItem href="/articles">Articles</MobileNavItem>
+            <MobileNavItem href="/projects">Projects</MobileNavItem>
+            <MobileNavItem href="/experience">Experience</MobileNavItem>
+            <MobileNavItem href="/about">About</MobileNavItem>
             <MobileNavItem href="/achievements">Achievements</MobileNavItem>
           </ul>
         </nav>
@@ -134,10 +134,10 @@ function DesktopNavigation(props: React.ComponentPropsWithoutRef<'nav'>) {
   return (
     <nav {...props}>
       <ul className="flex rounded-full border border-white/10 bg-white/5 px-3 text-sm font-medium backdrop-blur-xl">
-        <NavItem href="/about">About</NavItem>
-        <NavItem href="/experience">Experience</NavItem>
-        <NavItem href="/projects">Projects</NavItem>
         <NavItem href="/articles">Articles</NavItem>
+        <NavItem href="/projects">Projects</NavItem>
+        <NavItem href="/experience">Experience</NavItem>
+        <NavItem href="/about">About</NavItem>
         <NavItem href="/achievements">Achievements</NavItem>
       </ul>
     </nav>
@@ -156,7 +156,7 @@ function Avatar() {
           src={avatarImage}
           alt=""
           sizes="2.25rem"
-          className="h-9 w-9 rounded-full bg-zinc-800 object-cover"
+          className="h-9 w-9 rounded-full bg-zinc-800 object-cover grayscale-[0.35] contrast-125 hover:grayscale-0 transition-all duration-500"
           priority
         />
       </div>
@@ -179,30 +179,26 @@ export function Header() {
   return (
     <header
       className={clsx(
-        'pointer-events-none fixed inset-x-0 top-0 z-50 transition-all duration-300',
-        scrolled 
-          ? 'h-16 bg-zinc-900/80 backdrop-blur-xl border-b border-white/5'
-          : 'h-24 pt-6 sm:pt-8'
+        'pointer-events-none fixed inset-x-0 top-0 z-50 h-16 transition-colors duration-300',
+        scrolled && 'bg-zinc-900/80 backdrop-blur-xl border-b border-white/5'
       )}
     >
-      <Container className="h-16">
-        <div className="relative flex h-full items-center">
-          {/* Left: Avatar */}
-          <div className="flex flex-1 items-center justify-start pointer-events-auto">
-            {(scrolled || !isHomePage) ? <Avatar /> : null}
-          </div>
-
-          {/* Center: Desktop Navigation */}
-          <div className="hidden md:flex flex-1 justify-center pointer-events-auto">
-            <DesktopNavigation />
-          </div>
-
-          {/* Right: Mobile Navigation */}
-          <div className="flex flex-1 items-center justify-end pointer-events-auto">
-            <MobileNavigation className="md:hidden" />
-          </div>
+      <div className="mx-auto w-full max-w-[2500px] px-6 sm:px-8 lg:px-16 xl:px-24 h-full flex items-center justify-between">
+        {/* Left: Avatar */}
+        <div className="flex flex-1 items-center justify-start pointer-events-auto">
+          {(scrolled || !isHomePage) ? <Avatar /> : null}
         </div>
-      </Container>
+
+        {/* Center: Desktop Navigation */}
+        <div className="hidden md:flex flex-1 justify-center pointer-events-auto">
+          <DesktopNavigation />
+        </div>
+
+        {/* Right: Mobile Navigation */}
+        <div className="flex flex-1 items-center justify-end pointer-events-auto">
+          <MobileNavigation className="md:hidden" />
+        </div>
+      </div>
     </header>
   )
 }

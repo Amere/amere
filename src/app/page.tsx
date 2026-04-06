@@ -8,6 +8,7 @@ import { GlowCard } from '@/components/GlowCard'
 import { MeteorShower } from '@/components/MeteorShower'
 import { OrbitalCircles } from '@/components/OrbitalCircles'
 import { GlowingPlanet } from '@/components/GlowingPlanet'
+import { GlassTerminal } from '@/components/GlassTerminal'
 import {
   GitHubIcon,
   LinkedInIcon,
@@ -80,8 +81,8 @@ function HeroSection() {
       <ParticleBackground />
       <MeteorShower count={6} />
 
-      <div className="relative z-10 w-full px-6 sm:px-8 lg:px-16 xl:px-24 mx-auto max-w-[2500px]">
-        <div className="grid lg:grid-cols-5 gap-8 lg:gap-16 items-center">
+      <div className="relative z-10 w-full px-6 sm:px-8 lg:px-16 xl:px-24 mx-auto max-w-[2500px] min-h-[calc(100svh-4rem)] flex flex-col justify-center pb-20">
+        <div className="grid lg:grid-cols-5 gap-8 lg:gap-16 items-center w-full">
           {/* Left Column: Text (Takes up 3 columns) */}
           <div className="lg:col-span-3">
             <BlurFade delay={0.1}>
@@ -105,9 +106,8 @@ function HeroSection() {
 
             <BlurFade delay={0.5}>
               <p className="mt-4 sm:mt-6 max-w-xl text-base sm:text-lg text-zinc-300 leading-relaxed">
-                I&apos;m a builder by nature. I love building software systems that scale and have direct influence
-                in people&apos;s lives. 10+ years of coding, from AWS IAM to NLP products to fintech platforms
-                — across Egypt, Germany, the US, and Canada.
+                I explore systems architecture, functional programming, and technical leadership. 
+                I write about parsing complexities into simplicity and building scalable products from 0 to 1 and beyond.
               </p>
             </BlurFade>
 
@@ -143,10 +143,10 @@ function HeroSection() {
             <BlurFade delay={0.8}>
               <div className="mt-6 sm:mt-8 flex flex-wrap gap-4">
                 <Link
-                  href="/experience"
+                  href="/articles"
                   className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:shadow-[0_0_20px_rgba(34,211,238,0.4)]"
                 >
-                  View Experience
+                  Read Writing
                   <ArrowRightIcon className="h-4 w-4 stroke-white" />
                 </Link>
                 <Link
@@ -159,9 +159,9 @@ function HeroSection() {
             </BlurFade>
           </div>
 
-          {/* Right Column: Planet (Takes up 2 columns, centered for nice balance) */}
-          <BlurFade delay={1.0} className="hidden lg:flex lg:col-span-2 items-center justify-center pt-10 xl:pt-0">
-            <GlowingPlanet color="cyan" />
+          {/* Right Column: Terminal */}
+          <BlurFade delay={1.0} className="hidden lg:flex lg:col-span-2 items-center justify-center pt-10 xl:pt-0 w-full">
+            <GlassTerminal className="w-full max-w-[32rem]" />
           </BlurFade>
         </div>
       </div>
@@ -210,7 +210,7 @@ const experienceHighlights = [
 
 function ExperienceSection() {
   return (
-    <Container className="mt-16 sm:mt-24 md:mt-32">
+    <Container>
       <BlurFade>
         <div className="flex items-center justify-between">
           <h2 className="text-xl sm:text-2xl font-bold text-white sm:text-3xl">
@@ -292,7 +292,7 @@ const featuredProjects = [
 
 function ProjectsSection() {
   return (
-    <Container className="mt-16 sm:mt-24 md:mt-32">
+    <Container>
       <BlurFade>
         <div className="flex items-center justify-between">
           <h2 className="text-xl sm:text-2xl font-bold text-white sm:text-3xl">
@@ -348,7 +348,7 @@ function ProjectsSection() {
 
 function TechStackSection() {
   return (
-    <Container className="mt-16 sm:mt-24 md:mt-32">
+    <Container>
       <BlurFade>
         <h2 className="text-center text-xl sm:text-2xl font-bold text-white sm:text-3xl">
           Tech Stack
@@ -396,7 +396,7 @@ function ArticlesSection({ articles }: { articles: ArticleWithSlug[] }) {
   if (articles.length === 0) return null
 
   return (
-    <Container className="mt-16 sm:mt-24 md:mt-32">
+    <Container>
       <BlurFade>
         <div className="flex items-center justify-between">
           <h2 className="text-xl sm:text-2xl font-bold text-white sm:text-3xl">
@@ -429,10 +429,36 @@ export default async function Home() {
   return (
     <>
       <HeroSection />
-      <ExperienceSection />
-      <ProjectsSection />
-      <TechStackSection />
-      <ArticlesSection articles={articles} />
+      
+      {/* Blog takes precedence */}
+      <div className="relative z-10 w-full pt-8">
+        <ArticlesSection articles={articles} />
+      </div>
+
+      {/* Engineering Portfolio demoted to secondary focus */}
+      <div className="mt-16 sm:mt-24 md:mt-32 border-t border-white/5 pt-16 sm:pt-24 md:pt-32 bg-zinc-950/30">
+        <Container>
+          <BlurFade>
+            <h2 className="text-xl sm:text-2xl font-bold text-white sm:text-3xl mb-8">
+              Engineering Journey
+            </h2>
+            <p className="text-sm text-zinc-500 max-w-2xl">
+              While my primary focus is writing and exploring ideas, here is the history of systems and products I've built along the way.
+            </p>
+          </BlurFade>
+        </Container>
+        
+        <div className="mt-8">
+          <ProjectsSection />
+        </div>
+        <div className="mt-16">
+          <ExperienceSection />
+        </div>
+        <div className="mt-16 sm:mt-24">
+          <TechStackSection />
+        </div>
+      </div>
+
       <div className="h-16 sm:h-24" />
     </>
   )

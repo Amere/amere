@@ -26,7 +26,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="h-full antialiased dark overflow-x-hidden">
+    <html lang="en" className="min-h-full antialiased dark">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -40,7 +40,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className="flex h-full bg-[#09090b] overflow-x-hidden"
+        className="flex min-h-full flex-col bg-[#09090b] overflow-x-hidden"
         style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
       >
         <Providers>

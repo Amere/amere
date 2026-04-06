@@ -74,7 +74,7 @@ export default function About() {
                 src={portraitImage}
                 alt="Ahmed Amer"
                 sizes="(min-width: 1024px) 32rem, 20rem"
-                className="aspect-square rotate-3 rounded-2xl border border-white/10 bg-zinc-800 object-cover"
+                className="aspect-square rotate-3 rounded-2xl border border-white/10 bg-zinc-800 object-cover grayscale-[0.2] contrast-110 saturate-50 hover:grayscale-0 hover:saturate-100 transition-all duration-700"
               />
             </div>
           </BlurFade>
