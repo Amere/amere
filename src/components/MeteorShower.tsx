@@ -1,14 +1,35 @@
 'use client'
 
-export function MeteorShower({ count = 10 }: { count?: number }) {
-  const meteors = Array.from({ length: count }, (_, i) => ({
-    id: i,
-    left: `${Math.random() * 100}%`,
-    top: `${Math.random() * 50}%`,
-    delay: `${Math.random() * 5}s`,
-    duration: `${Math.random() * 3 + 2}s`,
-    size: Math.random() * 1.5 + 0.5,
-  }))
+import { useEffect, useState } from 'react'
+
+interface Meteor {
+  id: number
+  left: string
+  top: string
+  delay: string
+  duration: string
+  size: number
+  trailHeight: number
+}
+
+export function MeteorShower({ count = 25 }: { count?: number }) {
+  const [meteors, setMeteors] = useState<Meteor[]>([])
+
+  useEffect(() => {
+    setMeteors(
+      Array.from({ length: count }, (_, i) => ({
+        id: i,
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 50}%`,
+        delay: `${Math.random() * 8}s`,
+        duration: `${Math.random() * 5 + 3}s`,
+        size: Math.random() * 1.5 + 0.5,
+        trailHeight: 120 + Math.random() * 60,
+      }))
+    )
+  }, [count])
+
+  if (meteors.length === 0) return null
 
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -42,7 +63,7 @@ export function MeteorShower({ count = 10 }: { count?: number }) {
               className="absolute rounded-full"
               style={{
                 width: `${m.size * 0.5}px`,
-                height: `${120 + Math.random() * 60}px`,
+                height: `${m.trailHeight}px`,
                 top: `${m.size}px`,
                 left: `${m.size * 0.25}px`,
                 background:

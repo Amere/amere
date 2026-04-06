@@ -79,7 +79,7 @@ function HeroSection() {
   return (
     <div className="relative min-h-[85vh] flex items-center overflow-hidden">
       <ParticleBackground />
-      <MeteorShower count={6} />
+      <MeteorShower count={30} />
 
       <div className="relative z-10 w-full px-6 sm:px-8 lg:px-16 xl:px-24 mx-auto max-w-[2500px] min-h-[calc(100svh-4rem)] flex flex-col justify-center pb-20">
         <div className="grid lg:grid-cols-5 gap-8 lg:gap-16 items-center w-full">
@@ -146,8 +146,7 @@ function HeroSection() {
                   href="/articles"
                   className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:shadow-[0_0_20px_rgba(34,211,238,0.4)]"
                 >
-                  Read Writing
-                  <ArrowRightIcon className="h-4 w-4 stroke-white" />
+                  Read my writing :)
                 </Link>
                 <Link
                   href="/projects"

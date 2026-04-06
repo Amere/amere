@@ -90,7 +90,6 @@ export function Footer() {
                   <NavLink href="/experience">Experience</NavLink>
                   <NavLink href="/projects">Projects</NavLink>
                   <NavLink href="/articles">Articles</NavLink>
-                  <NavLink href="/achievements">Achievements</NavLink>
                 </div>
                 <p className="text-sm text-zinc-600">
                   &copy; {new Date().getFullYear()} Ahmed Amer. All rights
