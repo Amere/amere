@@ -26,7 +26,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="min-h-full antialiased dark">
+    <html lang="en" className="min-h-full antialiased dark overflow-y-scroll">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link

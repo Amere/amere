@@ -111,19 +111,21 @@ function NavItem({
   let isActive = usePathname() === href
 
   return (
-    <li>
+    <li className="flex items-center gap-2">
       <Link
         href={href}
         className={clsx(
-          'relative block px-3 py-2 transition',
+          'group relative block px-2 py-2 transition font-mono text-xs uppercase tracking-widest',
           isActive
             ? 'text-cyan-400'
-            : 'text-zinc-300 hover:text-cyan-400',
+            : 'text-zinc-500 hover:text-zinc-300',
         )}
       >
+        <span className="text-zinc-800 mr-1.5 transition-colors group-hover:text-zinc-600">[</span>
         {children}
+        <span className="text-zinc-800 ml-1.5 transition-colors group-hover:text-zinc-600">]</span>
         {isActive && (
-          <span className="absolute inset-x-1 -bottom-px h-px bg-gradient-to-r from-cyan-400/0 via-cyan-400/60 to-cyan-400/0" />
+          <span className="absolute inset-x-4 -bottom-px h-px bg-gradient-to-r from-cyan-400/0 via-cyan-400/80 to-cyan-400/0" />
         )}
       </Link>
     </li>
@@ -133,7 +135,7 @@ function NavItem({
 function DesktopNavigation(props: React.ComponentPropsWithoutRef<'nav'>) {
   return (
     <nav {...props}>
-      <ul className="flex rounded-full border border-white/10 bg-white/5 px-3 text-sm font-medium backdrop-blur-xl">
+      <ul className="flex items-center gap-2 md:gap-4 px-3 text-sm font-medium">
         <NavItem href="/articles">Articles</NavItem>
         <NavItem href="/projects">Projects</NavItem>
         <NavItem href="/experience">Experience</NavItem>
