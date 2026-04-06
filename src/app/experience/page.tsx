@@ -18,7 +18,7 @@ const experiences = [
     period: 'Jul 2025 — Present',
     location: 'Egypt',
     description:
-      'Building the next generation of technology solutions. Applying a decade of engineering experience across distributed systems, cloud infrastructure, and product development to create impactful technology.',
+      'Architecting zero-to-one scalable core infrastructure for the next generation of digital solutions. Defining technical vision, steering product execution, and embedding a high-velocity engineering culture built on distributed systems expertise.',
     highlights: [],
     tech: [],
     accentColor: 'from-fuchsia-500 to-purple-600',
@@ -31,7 +31,7 @@ const experiences = [
     period: 'Apr 2024 — Jun 2025',
     location: 'Berlin, Germany',
     description:
-      'Staff engineer building fintech payment infrastructure at scale. Working on core payment orchestration systems handling high-throughput transaction processing.',
+      'Spearheading the engineering of mission-critical fintech payment infrastructure. Orchestrating core transactional systems tailored for extreme high-throughput, low-latency financial reliability at massive global scale.',
     highlights: [],
     tech: [],
     accentColor: 'from-green-500 to-emerald-600',
@@ -44,7 +44,7 @@ const experiences = [
     period: 'Dec 2022 — Jan 2024',
     location: 'Vancouver, BC, Canada',
     description:
-      'First team member of the IAM Control Plane Platform team. Onboarded and scaled the team to 10 members, leading the re-architecture of IAM\'s control plane organization.',
+      'Foundational SDE for the IAM Control Plane Platform. Bootstrapped and scaled the engineering unit to 10+ members while architecting the overarching transition of massive IAM legacy components into agile microservices.',
     highlights: [
       'Developed Proxy-Router — the starting point of migrating IAM Control Plane into microservices architecture',
       'First IAM service to reach 100% automation from build to deployment across 30+ regions',
@@ -66,7 +66,7 @@ const experiences = [
     period: 'Oct 2020 — Aug 2021',
     location: 'Cairo, Egypt',
     description:
-      'Designed and built a full-stack e-learning platform for IGCSE English exam preparation. Single-handedly handled everything from design to deployment with full infrastructure automation.',
+      'Engineered and deployed an end-to-end e-learning management platform. Architected the entire lifecycle—from isolated React interactive systems to fully automated AWS Terraform infrastructure deployments.',
     highlights: [
       'Built all IGCSE question types in React: fill-in, MCQ, listening, speaking',
       'Auto-corrected exams with teacher override for speaking questions',
@@ -84,7 +84,7 @@ const experiences = [
     period: 'Oct 2018 — Oct 2020',
     location: 'Heidelberg, Germany',
     description:
-      'Helped 100Worte scale from 1 product in 6 years of development into 7 different products in a single year. Held the CTO position for ~6 months, leading both data scientists and software engineers.',
+      'Drove hyperscale engineering growth, fracturing a 6-year monolithic roadmap to deliver 7 distinct NLP SaaS products in under twelve months. Transitioned into the CTO role, spearheading deep technical synchronization across Data Science and functional Clojure teams.',
     highlights: [
       'Designed and implemented 3 new NLP products: job posting editor, email parser, voice-to-text categorizer',
       'Full migration of jinja2 templates into React SPAs',
