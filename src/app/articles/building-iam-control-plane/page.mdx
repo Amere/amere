@@ -1,0 +1,84 @@
+import { ArticleLayout } from '@/components/ArticleLayout'
+
+export const article = {
+  author: 'Ahmed Amer',
+  date: '2024-01-15',
+  title: 'From Monolith to 3ms P99: Architecting the IAM Control Plane',
+  description:
+    'How we built a Proxy-Router service at AWS IAM that became the first to achieve fully automated build-to-deployment across 30+ regions, with P99 latency under 3 milliseconds.',
+}
+
+export const metadata = {
+  title: article.title,
+  description: article.description,
+}
+
+export default (props) => <ArticleLayout article={article} {...props} />
+
+When I joined the IAM Control Plane Platform team at AWS, I had the unique opportunity of being the first team member. This meant everything was greenfield — and everything needed to be built with the kind of rigor that IAM demands. After all, when your service sits in the critical path of authentication and authorization for all of AWS, there's no room for "move fast and break things."
+
+## The Proxy-Router Concept
+
+The core idea was simple in theory but challenging in execution: build a proxy service that would serve as the entry point for migrating IAM's monolithic control plane into a microservices architecture. This proxy needed to:
+
+1. Route traffic intelligently between old and new infrastructure
+2. Handle massive I/O throughput with minimal latency overhead
+3. Be the first service to prove that full automation was possible for IAM
+
+The P99 latency target was aggressive — under 3 milliseconds. For context, this is the kind of number where every allocation matters, every context switch is expensive, and your thread pooling strategy can make or break you.
+
+## Custom Thread Pooling for I/O-Heavy Workloads
+
+Standard thread pool implementations weren't cutting it. A proxy service has fundamentally different I/O characteristics than a typical web service. Every incoming request generates at least one (often multiple) outbound requests. The ratio of I/O wait to computation is extreme.
+
+We built a custom thread pooling solution that was specifically tuned for this pattern:
+
+```java
+// Conceptual approach — the actual implementation is proprietary
+// Key insight: separate pools for accept, read, and downstream I/O
+ExecutorService acceptPool = Executors.newFixedThreadPool(
+    Runtime.getRuntime().availableProcessors()
+);
+ExecutorService ioPool = new CustomBoundedPool(
+    maxConcurrent,
+    queueDepth,
+    rejectionPolicy
+);
+```
+
+The key insight was to separate the thread pools by operation type rather than by request. This eliminated head-of-line blocking where a slow downstream could starve the accept loop.
+
+## Achieving 100% Deployment Automation
+
+The bigger challenge was operational. IAM services deploy to 30+ AWS regions, each with multiple Availability Zones. Manual deployment at this scale isn't just slow — it's a reliability risk. Every manual step is a potential point of human error.
+
+We achieved 100% automation from build to deployment by:
+
+- **Infrastructure as Code everywhere**: The same Terraform/CloudFormation templates that defined production also defined our performance testing environments
+- **Canary deployments**: Every region got a canary deployment first, with automated rollback on fault metrics
+- **Percentage-based traffic cut-over**: We built a system that would gradually shift traffic from old to new infrastructure and automatically stop the cut-over if fault metrics crossed thresholds
+
+## The Fail-to-Disk Throttling Technique
+
+One of the more interesting problems was IP-based throttling. We needed to rate-limit requests, but the third-party service holding the throttling rules could go down. In a proxy service, you can't just fail-open (security risk) or fail-closed (availability risk).
+
+The solution was a fail-to-disk approach: the throttling rules are continuously synced to local disk. When the remote service is unavailable, we fall back to the most recently synced rules. The state persists across service restarts, ensuring consistent throttling behavior even during extended outages.
+
+## Performance Testing on Parallel Infrastructure
+
+One of the most valuable decisions was to run performance tests on infrastructure built from the same IaC code as production. This gave us two things:
+
+1. **Correct instance type selection**: We could test different instance types under realistic load and choose the optimal cost/performance ratio per region
+2. **Accurate capacity estimates**: By testing with dummy downstream services that simulated various latency profiles, we could fine-tune timeouts to maximize throughput while minimizing fault rates
+
+The test infrastructure also served as a timeout tuning lab. By creating dummy downstream services with configurable latency distributions, we could find the timeout values that yielded the best balance between performance and reliability.
+
+## Key Takeaways
+
+After a year of building the IAM Proxy-Router, here's what I'd distill:
+
+1. **Automation is a multiplier, not a cost**. The upfront investment in 100% automation paid for itself within weeks of actual deployments.
+2. **Thread pooling is architecture**. For I/O-heavy services, your thread pool design is as important as your service architecture.
+3. **Test on production-equivalent infrastructure**. If your test environment doesn't match production, your test results don't mean much.
+4. **Design for partial failure**. Every external dependency will fail. The question is whether your service degrades gracefully or falls over.
+5. **Being first is a responsibility**. As the first fully automated IAM service, we set the patterns and expectations for every team that followed.

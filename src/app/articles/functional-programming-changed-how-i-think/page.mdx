@@ -1,0 +1,117 @@
+import { ArticleLayout } from '@/components/ArticleLayout'
+
+export const article = {
+  author: 'Ahmed Amer',
+  date: '2023-06-20',
+  title: 'State, Time, and Scale: Why Clojure Reshaped My Brain',
+  description:
+    'From Clojure and temporal databases to async channels for audio processing — how functional programming paradigms reshaped my approach to building production systems.',
+}
+
+export const metadata = {
+  title: article.title,
+  description: article.description,
+}
+
+export default (props) => <ArticleLayout article={article} {...props} />
+
+I started my career writing Java and JavaScript. Imperative, object-oriented, mutation-heavy code. It worked. Products shipped. But when I joined 100Worte in Heidelberg and was thrown into Clojure and Datomic, something fundamental shifted in how I think about software.
+
+## The Gateway: Clojure at 100Worte
+
+100Worte was an NLP company that had built its core product in Clojure — a Lisp that runs on the JVM. When I joined, the company had exactly one product, built over 6 years. By the time I left two years later, we had seven.
+
+The speed increase wasn't just about better processes (though that helped). It was about the leverage that functional programming gives you when building systems that need to compose, transform, and process data.
+
+```clojure
+;; Processing text through an NLP pipeline
+;; Each step is a pure function — composable, testable, replaceable
+(->> input-text
+     tokenize
+     (map normalize)
+     (filter significant?)
+     analyze-sentiment
+     (merge-with + frequency-map)
+     format-response)
+```
+
+The beauty of this style isn't aesthetic — it's practical. Each function in the pipeline:
+- Has no side effects
+- Can be tested in isolation
+- Can be replaced without affecting others
+- Can be composed into new pipelines trivially
+
+## Temporal Databases Changed My Mental Model
+
+Clojure's ecosystem introduced me to Datomic, a temporal database that stores facts about entities over time. Instead of updating a row (destroying the old value), Datomic records a new fact while preserving the old one.
+
+This sounds academic until you need it. At 100Worte, we had use cases where knowing *what a text analysis looked like last week* versus *today* was essential for our customers. With PostgreSQL, this requires audit tables, triggers, and careful schema design. With Datomic, it's the default behavior.
+
+```clojure
+;; Query the database as of a specific point in time
+(d/q '[:find ?text ?score
+        :where [?e :analysis/text ?text]
+               [?e :analysis/score ?score]]
+     (d/as-of db last-tuesday))
+```
+
+The mental model shift is profound: data is not a current state to be mutated — it's a growing log of facts. Once you internalize this, you start seeing state management differently everywhere.
+
+## Async Channels for Audio Processing
+
+One of the most challenging projects at 100Worte was building a voice-to-text categorizer. Users spoke into a microphone, and the system needed to transcribe, analyze, and categorize the speech in near-real-time.
+
+Clojure's `core.async` library — inspired by Go's channels and CSP (Communicating Sequential Processes) — was the perfect tool. The approach:
+
+1. Split incoming audio into chunks
+2. Send each chunk through a channel to a pool of transcription workers
+3. Collect results through another channel
+4. Reassemble in order and run categorization
+
+```clojure
+(let [audio-chunks (chan 32)
+      transcribed (chan 32)
+      results (chan)]
+  ;; Producer: split audio into chunks
+  (go-loop [chunk (next-chunk audio-stream)]
+    (when chunk
+      (>! audio-chunks chunk)
+      (recur (next-chunk audio-stream))))
+
+  ;; Workers: transcribe in parallel
+  (dotimes [_ worker-count]
+    (go-loop []
+      (when-let [chunk (<! audio-chunks)]
+        (>! transcribed (transcribe chunk))
+        (recur))))
+
+  ;; Consumer: reassemble and categorize
+  (go-loop [acc []]
+    (if-let [text (<! transcribed)]
+      (recur (conj acc text))
+      (>! results (categorize (join acc))))))
+```
+
+The CSP model made it trivial to reason about concurrency without locks, shared mutable state, or callback hell. Each component is isolated, communicates through channels, and can be scaled independently.
+
+## What I Took Back to Imperative Languages
+
+After two years of predominantly functional programming, I went back to Java at AWS. But I was a different programmer:
+
+**Immutability by default.** I now reach for immutable data structures first. In Java, this means `final` everywhere, `List.of()`, `Map.of()`, and builder patterns. The reduction in bugs from accidental mutation is worth the slight verbosity.
+
+**Pure functions where possible.** Even in object-oriented code, I try to make methods that take inputs and return outputs without side effects. The methods that *do* have side effects are clearly isolated and named accordingly.
+
+**Composition over inheritance.** Functional programming's emphasis on composing small functions transfers directly to composing small, focused classes and services.
+
+**Data as the interface.** Instead of passing objects with complex behaviors, I prefer passing data structures. This makes serialization, testing, and debugging dramatically easier.
+
+## The Multi-Paradigm Sweet Spot
+
+I don't believe functional programming is always the right answer. Java's performance characteristics were essential for the IAM Proxy-Router's P99 latency targets. Python's ecosystem makes it the right choice for data science. JavaScript's ubiquity makes it ideal for full-stack web development.
+
+But functional programming *thinking* — immutability, pure functions, data-oriented design, explicit state management — makes you better at all of these languages. It's not about the syntax. It's about the mental model.
+
+The best systems I've built were the ones where I applied functional thinking to the right problems, regardless of the language. A Clojure-style pipeline in Java. An immutable state tree in a React application. A temporal log in a PostgreSQL schema.
+
+Programming paradigms aren't religions. They're tools. And the more tools you genuinely understand, the better your solutions become.

@@ -1,0 +1,119 @@
+@import 'tailwindcss';
+@import './prism.css' layer(components);
+
+@plugin '@tailwindcss/typography';
+@config '../../typography.ts';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.5rem;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.5rem;
+  --text-base: 1rem;
+  --text-base--line-height: 1.75rem;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.75rem;
+  --text-xl: 1.25rem;
+  --text-xl--line-height: 2rem;
+  --text-2xl: 1.5rem;
+  --text-2xl--line-height: 2rem;
+  --text-3xl: 1.875rem;
+  --text-3xl--line-height: 2.25rem;
+  --text-4xl: 2rem;
+  --text-4xl--line-height: 2.5rem;
+  --text-5xl: 3rem;
+  --text-5xl--line-height: 3.5rem;
+  --text-6xl: 3.75rem;
+  --text-6xl--line-height: 1;
+  --text-7xl: 4.5rem;
+  --text-7xl--line-height: 1;
+  --text-8xl: 6rem;
+  --text-8xl--line-height: 1;
+  --text-9xl: 8rem;
+  --text-9xl--line-height: 1;
+
+  --color-accent-cyan: #06b6d4;
+  --color-accent-violet: #8b5cf6;
+  --color-accent-fuchsia: #d946ef;
+  --color-surface-glass: rgba(255, 255, 255, 0.05);
+  --color-surface-glass-border: rgba(255, 255, 255, 0.1);
+  --color-space-black: #09090b;
+
+  --animate-gradient-shift: gradient-shift 8s ease infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-glow-pulse: glow-pulse 2s ease-in-out infinite alternate;
+  --animate-meteor: meteor 5s linear infinite;
+  --animate-orbit: orbit 20s linear infinite;
+  --animate-grid-fade: grid-fade 3s ease-in-out infinite alternate;
+}
+
+@layer base {
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+
+  @keyframes glow-pulse {
+    0% { box-shadow: 0 0 5px rgba(6, 182, 212, 0.2), 0 0 20px rgba(139, 92, 246, 0.1); }
+    100% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.4), 0 0 60px rgba(139, 92, 246, 0.2); }
+  }
+
+  @keyframes meteor {
+    0% { transform: rotate(215deg) translateX(0); opacity: 1; }
+    70% { opacity: 1; }
+    100% { transform: rotate(215deg) translateX(-500px); opacity: 0; }
+  }
+
+  @keyframes orbit {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes grid-fade {
+    0% { opacity: 0.3; }
+    100% { opacity: 0.6; }
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  @keyframes border-beam {
+    100% { offset-distance: 100%; }
+  }
+}
+
+@utility glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@utility gradient-text {
+  background: linear-gradient(135deg, #06b6d4, #8b5cf6, #d946ef, #06b6d4);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 8s ease infinite;
+}
+
+@utility glow-border {
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.15), 0 0 45px rgba(139, 92, 246, 0.08);
+}
+
+@utility text-gradient-static {
+  background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

@@ -1,0 +1,122 @@
+import { ArticleLayout } from '@/components/ArticleLayout'
+
+export const article = {
+  author: 'Ahmed Amer',
+  date: '2023-03-10',
+  title: 'The 12-Month Multiplier: Engineering a 7x Product Expansion',
+  description:
+    'How a small NLP startup in Heidelberg went from a single product built over 6 years to shipping 7 products in one year — and the engineering decisions that made it possible.',
+}
+
+export const metadata = {
+  title: article.title,
+  description: article.description,
+}
+
+export default (props) => <ArticleLayout article={article} {...props} />
+
+When I joined 100Worte Sprachanalyse in Heidelberg, Germany, the company had been building a single NLP product for six years. When I left two years later, we had shipped seven products. The transitional period where I held the CTO position — leading both data scientists and software engineers — was one of the most formative experiences of my career.
+
+Here's how we did it, and more importantly, what I learned about the difference between building one thing and building many things.
+
+## The Starting Point
+
+100Worte had a solid foundation: a Python-based NLP engine that could analyze text for readability, sentiment, and language quality. The problem was that this engine was tightly coupled to a single web application built with Jinja2 templates. Everything — the NLP analysis, the UI, the data storage — was one monolithic system.
+
+The first product had taken 6 years because every feature required changes across the entire stack. Adding a new analysis type meant modifying the NLP engine, the database schema, the template rendering, and the deployment pipeline. There was no separation of concerns.
+
+## The Platform Pivot
+
+The key insight was simple but transformative: **the NLP engine is a platform, not a product.**
+
+We extracted the NLP engine into a standalone service with a clean API. Then we could build products *on top of it* rather than *inside of it*. Each new product could:
+
+- Call the NLP engine via API
+- Have its own frontend (React SPAs instead of Jinja2 templates)
+- Store its own domain-specific data
+- Be developed, tested, and deployed independently
+
+```
+Before:  [Monolith: UI + NLP + DB]
+After:   [NLP Engine API] ← [Product A] [Product B] [Product C]
+```
+
+## The Seven Products
+
+With the platform architecture in place, we built three entirely new products in rapid succession:
+
+### 1. Job Posting Rich Text Editor
+An editor that analyzed job posting text in real-time, suggesting better words to attract diverse candidates. The challenge was building a parallel HTML DOM that could overlay suggestions, highlights, and removal markers on top of the raw text without disrupting the user's editing experience.
+
+### 2. Customer Satisfaction Email Parser
+A tool that ingested support emails and categorized them by sentiment, urgency, and topic. This was one of the first products to leverage the NLP engine's batch processing capabilities.
+
+### 3. Voice-to-Text Categorizer
+The most technically ambitious project — a tool that accepted audio input, transcribed it using Clojure's async channels for parallel processing, and then ran the resulting text through the NLP pipeline.
+
+On top of these, we migrated the existing product suite to the new architecture, which gave us 7 total products.
+
+## Technical Decisions That Mattered
+
+### Clojure for Backend Services
+
+Clojure's strengths aligned perfectly with our needs:
+- **Immutable data structures** reduced concurrency bugs in the audio processing pipeline
+- **REPL-driven development** dramatically shortened the feedback loop
+- **JVM interop** let us leverage existing Java NLP libraries
+- **`core.async`** made the audio-to-text pipeline elegant and maintainable
+
+### Datomic as the Database
+
+Datomic's temporal model was invaluable. When a customer wanted to see how their text analysis had changed over time, we could query the database at any point in its history. No audit tables, no event sourcing infrastructure — it was built into the database itself.
+
+I became the main maintainer for the Datomic instance, including migrating a significant volume of Datoms and Cassandra entries into JSON files for analysis and cross-system migrations.
+
+### Test-Driven Development at ~95% Coverage
+
+With multiple products sharing a core NLP engine, we needed confidence that changes to shared code wouldn't break downstream products. TDD wasn't optional — it was survival:
+
+```clojure
+(deftest analyze-text-test
+  (testing "Basic sentiment analysis"
+    (let [result (analyze "This product is excellent and I love it")]
+      (is (> (:sentiment result) 0.7))
+      (is (= (:language result) :en))))
+
+  (testing "Complex sentence detection"
+    (let [result (analyze "The implementation of the aforementioned...")]
+      (is (seq (:complex-sentences result))))))
+```
+
+Integration tests with cleanup hooks ensured that each test ran against a known state, and every commit was tested before deployment.
+
+### Full Migration from Jinja2 to React
+
+We migrated the entire frontend from server-rendered Jinja2 templates to React single-page applications. This was essential for the rich-text editor product, where real-time interaction with the NLP engine required a proper client-side framework.
+
+The rich-text editor was particularly challenging: as users typed, the content was sent to the backend, which returned modification positions for highlights, word suggestions, and complex sentence markers. A parallel HTML DOM maintained these overlays without interfering with the user's typing.
+
+## The Transitional CTO Period
+
+For about six months, I held the CTO position. This meant leading two distinct teams:
+
+- **Data Scientists** who maintained and improved the NLP models
+- **Software Engineers** who built the products and infrastructure
+
+The biggest challenge was communication. Data scientists think in models, precision, and recall. Engineers think in latency, throughput, and reliability. Bridging this gap required creating shared vocabulary and clear interfaces between the teams.
+
+The most impactful decision during this period was establishing a clear contract between the NLP engine API and the product teams. This contract defined input/output formats, latency SLAs, and error handling behavior. With this contract in place, the two teams could work independently and ship faster.
+
+## Lessons for Scaling Product Output
+
+**1. Extract platforms early.** If your core technology could serve multiple products, don't wait until you need the second product to extract it. The refactoring cost only grows with time.
+
+**2. New products should be independent deployments.** If shipping Product B requires changes to Product A's deployment, you've coupled them. Each product should own its deployment pipeline.
+
+**3. TDD isn't optional in multi-product architectures.** When multiple products depend on shared code, untested changes are time bombs. Invest in test coverage on shared components.
+
+**4. Small, cross-functional teams ship faster.** Each product team had an engineer who could work on both frontend and backend. Eliminating hand-offs between specialists was a massive speed multiplier.
+
+**5. The CTO's job is communication, not code.** During the transitional period, the highest-leverage work I did wasn't writing code — it was creating alignment between teams with fundamentally different mental models.
+
+Going from 1 product in 6 years to 7 products in 1 year wasn't magic. It was architecture, discipline, and a willingness to invest in the platform before building on top of it.
