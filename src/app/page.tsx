@@ -146,7 +146,8 @@ function HeroSection() {
                   href="/articles"
                   className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:shadow-[0_0_20px_rgba(34,211,238,0.4)]"
                 >
-                  Read my writing :)
+                  Read my thoughts
+                  <ArrowRightIcon className="h-4 w-4 stroke-white" />
                 </Link>
                 <Link
                   href="/projects"
