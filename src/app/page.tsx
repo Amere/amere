@@ -159,8 +159,8 @@ function HeroSection() {
             </BlurFade>
           </div>
 
-          {/* Right Column: Planet (Takes up 2 columns, floats right) */}
-          <BlurFade delay={1.0} className="hidden lg:flex lg:col-span-2 items-center justify-end">
+          {/* Right Column: Planet (Takes up 2 columns, centered for nice balance) */}
+          <BlurFade delay={1.0} className="hidden lg:flex lg:col-span-2 items-center justify-center pt-10 xl:pt-0">
             <GlowingPlanet color="cyan" />
           </BlurFade>
         </div>
