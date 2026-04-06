@@ -42,7 +42,7 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { slug, action } = body
     
-    if (!slug || !['up', 'down', 'view'].includes(action)) {
+    if (!slug || !['up', 'down', 'views'].includes(action)) {
       return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
     }
     

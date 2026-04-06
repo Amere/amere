@@ -23,7 +23,7 @@ export function ViewCounter({ slug }: { slug: string }) {
     fetch('/api/reactions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ slug, action: 'view' }),
+      body: JSON.stringify({ slug, action: 'views' }),
     })
     .then((res) => res.json())
     .then((data) => {
