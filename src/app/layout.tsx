@@ -6,7 +6,7 @@ import { Layout } from '@/components/Layout'
 import '@/styles/tailwind.css'
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://ahmedamer.dev'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://amere.me'),
   title: {
     template: '%s — Ahmed Amer',
     default:
@@ -18,6 +18,21 @@ export const metadata: Metadata = {
     types: {
       'application/rss+xml': `${process.env.NEXT_PUBLIC_SITE_URL}/feed.xml`,
     },
+  },
+  openGraph: {
+    title: 'Ahmed Amer',
+    description: "I'm Ahmed Amer, a Co-Founder & CTO at Nexplore Technologies. I build software systems that scale and have direct influence in people's lives.",
+    url: 'https://amere.me',
+    siteName: 'Ahmed Amer',
+    images: [
+      {
+        url: '/opengraph-image.png',
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
   },
 }
 

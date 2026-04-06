@@ -11,6 +11,19 @@ export const article = {
 export const metadata = {
   title: article.title,
   description: article.description,
+  openGraph: {
+    title: article.title,
+    description: article.description,
+    type: 'article',
+    url: 'https://amere.me/articles/functional-programming-changed-how-i-think',
+    images: [
+      {
+        url: '/opengraph-image.png',
+        width: 1200,
+        height: 630,
+      }
+    ]
+  }
 }
 
 export default (props) => <ArticleLayout article={article} {...props} />
