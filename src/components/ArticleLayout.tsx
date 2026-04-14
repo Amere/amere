@@ -6,8 +6,7 @@ import { useRouter } from 'next/navigation'
 import { AppContext } from '@/app/providers'
 import { Container } from '@/components/Container'
 import { Prose } from '@/components/Prose'
-import { ArticleReactions } from '@/components/ArticleReactions'
-import { ViewCounter } from '@/components/ViewCounter'
+
 import { type ArticleWithSlug } from '@/lib/articles'
 import { formatDate } from '@/lib/formatDate'
 import { usePathname } from 'next/navigation'
@@ -62,14 +61,13 @@ export function ArticleLayout({
                   <span className="h-4 w-0.5 rounded-full bg-cyan-400/40" />
                   <span className="ml-3 mr-4">{formatDate(article.date)}</span>
                 </time>
-                <div className="h-1 w-1 rounded-full bg-cyan-400/20 mr-4" />
-                <ViewCounter slug={currentSlug} />
+
               </div>
             </header>
             <Prose className="mt-8" data-mdx-content>
               {children}
             </Prose>
-            <ArticleReactions slug={currentSlug} />
+
           </article>
         </div>
       </div>
