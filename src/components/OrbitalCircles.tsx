@@ -32,8 +32,8 @@ function OrbitRing({ items, radius, mobileRadius, duration, reverse = false }: O
         {items.map((item, i) => {
           const angle = (360 / items.length) * i
           const rad = (angle * Math.PI) / 180
-          const x = Math.cos(rad) * radius
-          const y = Math.sin(rad) * radius
+          const x = Number((Math.cos(rad) * radius).toFixed(2))
+          const y = Number((Math.sin(rad) * radius).toFixed(2))
           return (
             <div
               key={item.label}
@@ -70,8 +70,8 @@ function OrbitRing({ items, radius, mobileRadius, duration, reverse = false }: O
         {items.map((item, i) => {
           const angle = (360 / items.length) * i
           const rad = (angle * Math.PI) / 180
-          const x = Math.cos(rad) * mobileRadius
-          const y = Math.sin(rad) * mobileRadius
+          const x = Number((Math.cos(rad) * mobileRadius).toFixed(2))
+          const y = Number((Math.sin(rad) * mobileRadius).toFixed(2))
           return (
             <div
               key={item.label}
